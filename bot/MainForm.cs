@@ -10,6 +10,8 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Threading;
+using System.Diagnostics;
 
 namespace bot
 {
@@ -18,6 +20,8 @@ namespace bot
 	/// </summary>
 	public partial class MainForm : Form
 	{
+		private Random rnd;
+		
 		public MainForm()
 		{
 			//
@@ -25,9 +29,12 @@ namespace bot
 			//
 			InitializeComponent();
 			webBrowser1.Url=new Uri("http://elem.mobi/login");
+			
 			//
 			// TODO: Add constructor code after the InitializeComponent() call.
 			//
+			
+			rnd = new Random();
 		}
 		
 		
@@ -38,65 +45,103 @@ namespace bot
 		}
 		void BtStartClick(object sender, EventArgs e)
 		{
-			Login("as","a");
+			Login("Vi Ex","Ecs848pa");
+			textBox1.Text = "Логин"+Environment.NewLine;
 			
 		}
 		
-		void Login(String name, String password)
+		void Login(String userName, String userPassword)
 		{
+			// Ищем поля для ввода логинопароля, если нашли - заполняем
+	
 			HtmlElementCollection elems = webBrowser1.Document.GetElementsByTagName("input");
             foreach (HtmlElement elem in elems)
             {
                 String nameStr = elem.GetAttribute("name");
                 if (nameStr == "plogin")
                 	{
-                      elem.SetAttribute(nameStr, "Vi Ex");
-                       elem.InnerText = "Vi Ex";
+      //                elem.SetAttribute(nameStr, "");
+                       elem.InnerText = userName;
  
             	}
            		 if (nameStr == "ppass")
            			 {
-              		  elem.SetAttribute(nameStr, "Ecs848pa");
-               			 elem.InnerText = "Ecs848pa";
+              		  //elem.SetAttribute(nameStr, "Ecs848pa");
+               			 elem.InnerText = userPassword;
  
            		 }
             }
+            // Ищем кнопку Вход. Нашли? Нажали!
+            
             elems = webBrowser1.Document.GetElementsByTagName("input");
             foreach (HtmlElement elem in elems)
             {
-	
 			    String nameStr = elem.GetAttribute("value");
 			    if (nameStr == "Вход")
 			    {
 				    elem.InvokeMember("Click");
+				    break;
 			    }
             }
 		}
 		
+		void FindAndClick(String TagName, String InText)
+		{
+			HtmlElementCollection elems = webBrowser1.Document.GetElementsByTagName(TagName);
+			foreach (HtmlElement elem in elems)
+			{			
+				if (elem.InnerText.Contains(InText)) {
+					elem.InvokeMember("Click");
+					break;
+				}
+			}
+		}
+		
+		private void Delay (int value)
+        {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            while (sw.ElapsedMilliseconds < value)
+                Application.DoEvents();
+        }
 		
 		void BtStopClick(object sender, EventArgs e)
 		{
-			textBox1.Text="";
-			HtmlElementCollection elems = webBrowser1.Document.GetElementsByTagName("a");
-			foreach (HtmlElement elem in elems)
+			FindAndClick("a", "Записаться");
+			textBox1.Text = "==="+Environment.NewLine;
+			Delay(rnd.Next(1500, 1900));
+			
+			Boolean reload;
+			do
 			{
-//				string link = elem.GetAttribute("href");
-//				textBox1.Text+= link+Environment.NewLine;
-				//textBox1.Text+= elem.InnerText+Environment.NewLine;
-				if (elem.InnerText == "Записаться"){
-					elem.InvokeMember("Click");
+				HtmlElementCollection elems = webBrowser1.Document.All;//.GetElementsByTagName("div");
+				reload = true;
+				textBox1.Text +="==="+Environment.NewLine;
+				foreach (HtmlElement elem in  elems)
+				{					
+					textBox1.Text += elem.InnerText +Environment.NewLine;
+					if (elem.InnerText!=null)
+					{
+						if (elem.InnerText.Contains("Бой начнется")) 
+						{
+							reload = false;
+							FindAndClick("a","Обновить");
+							break;
+						}
+					}
+				
 				}
+				Delay(rnd.Next(300, 500));
 			}
+			while (reload);	//
+			
+			
 			
 			
 			
         }
-		void TextBox1TextChanged(object sender, EventArgs e)
-		{
-	
-		}
-            
-		}
+		           
 	}
+}
 
 
