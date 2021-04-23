@@ -18,6 +18,8 @@ namespace bot
 		private System.Windows.Forms.Button btStart;
 		private System.Windows.Forms.Button btStop;
 		private System.Windows.Forms.TextBox textBox1;
+		private System.Windows.Forms.TextBox tbAtrib;
+		private System.Windows.Forms.Button btAnalize;
 		
 		/// <summary>
 		/// Disposes resources used by the form.
@@ -44,22 +46,22 @@ namespace bot
 			this.btStart = new System.Windows.Forms.Button();
 			this.btStop = new System.Windows.Forms.Button();
 			this.textBox1 = new System.Windows.Forms.TextBox();
+			this.tbAtrib = new System.Windows.Forms.TextBox();
+			this.btAnalize = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// webBrowser1
 			// 
-			this.webBrowser1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-			| System.Windows.Forms.AnchorStyles.Left)));
 			this.webBrowser1.Location = new System.Drawing.Point(12, 12);
-			this.webBrowser1.MinimumSize = new System.Drawing.Size(500, 880);
 			this.webBrowser1.Name = "webBrowser1";
 			this.webBrowser1.ScrollBarsEnabled = false;
-			this.webBrowser1.Size = new System.Drawing.Size(521, 898);
+			this.webBrowser1.Size = new System.Drawing.Size(498, 898);
 			this.webBrowser1.TabIndex = 0;
+			this.webBrowser1.WebBrowserShortcutsEnabled = false;
 			// 
 			// btStart
 			// 
-			this.btStart.Location = new System.Drawing.Point(539, 22);
+			this.btStart.Location = new System.Drawing.Point(557, 27);
 			this.btStart.Name = "btStart";
 			this.btStart.Size = new System.Drawing.Size(75, 23);
 			this.btStart.TabIndex = 1;
@@ -69,7 +71,7 @@ namespace bot
 			// 
 			// btStop
 			// 
-			this.btStop.Location = new System.Drawing.Point(539, 66);
+			this.btStop.Location = new System.Drawing.Point(557, 68);
 			this.btStop.Name = "btStop";
 			this.btStop.Size = new System.Drawing.Size(75, 23);
 			this.btStop.TabIndex = 2;
@@ -84,15 +86,34 @@ namespace bot
 			this.textBox1.Location = new System.Drawing.Point(638, 12);
 			this.textBox1.Multiline = true;
 			this.textBox1.Name = "textBox1";
+			this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
 			this.textBox1.Size = new System.Drawing.Size(593, 898);
 			this.textBox1.TabIndex = 3;
-			
+			// 
+			// tbAtrib
+			// 
+			this.tbAtrib.Location = new System.Drawing.Point(532, 109);
+			this.tbAtrib.Name = "tbAtrib";
+			this.tbAtrib.Size = new System.Drawing.Size(100, 20);
+			this.tbAtrib.TabIndex = 4;
+			// 
+			// btAnalize
+			// 
+			this.btAnalize.Location = new System.Drawing.Point(546, 135);
+			this.btAnalize.Name = "btAnalize";
+			this.btAnalize.Size = new System.Drawing.Size(75, 23);
+			this.btAnalize.TabIndex = 5;
+			this.btAnalize.Text = "Анализ";
+			this.btAnalize.UseVisualStyleBackColor = true;
+			this.btAnalize.Click += new System.EventHandler(this.BtAnalizeClick);
 			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(1243, 922);
+			this.Controls.Add(this.btAnalize);
+			this.Controls.Add(this.tbAtrib);
 			this.Controls.Add(this.textBox1);
 			this.Controls.Add(this.btStop);
 			this.Controls.Add(this.btStart);
@@ -104,5 +125,5 @@ namespace bot
 			this.PerformLayout();
 
 		}
-		}
-	}
+	}	
+}

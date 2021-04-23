@@ -50,6 +50,10 @@ namespace bot
 			
 		}
 		
+		
+		
+		
+		
 		void Login(String userName, String userPassword)
 		{
 			// Ищем поля для ввода логинопароля, если нашли - заполняем
@@ -85,61 +89,130 @@ namespace bot
             }
 		}
 		
-		void FindAndClick(String TagName, String InText)
+		Boolean FindAndClick(String TagName, String InText)
 		{
 			HtmlElementCollection elems = webBrowser1.Document.GetElementsByTagName(TagName);
 			foreach (HtmlElement elem in elems)
 			{			
+				if (elem.InnerText != null)
 				if (elem.InnerText.Contains(InText)) {
 					elem.InvokeMember("Click");
-					break;
+					return true;
 				}
 			}
+			return false;
 		}
 		
 		private void Delay (int value)
         {
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            while (sw.ElapsedMilliseconds < value)
+            while (sw.ElapsedMilliseconds < value);
                 Application.DoEvents();
         }
 		
 		void BtStopClick(object sender, EventArgs e)
 		{
-			FindAndClick("a", "Записаться");
-			textBox1.Text = "==="+Environment.NewLine;
-			Delay(rnd.Next(1500, 1900));
 			
+			HtmlElementCollection elems;
+			
+			while ( !FindAndClick("a", "Записаться") )
+			{Delay(250);}
+			Delay(250);
+			
+			textBox1.Text = "==="+Environment.NewLine;
+			Delay(1950);
+			textBox1.Text += "===delay"+Environment.NewLine;
+			
+			while (webBrowser1.IsBusy){ Application.DoEvents();}
+			
+			textBox1.Text += "==="+webBrowser1.IsBusy+Environment.NewLine;
 			Boolean reload;
 			do
 			{
-				HtmlElementCollection elems = webBrowser1.Document.All;//.GetElementsByTagName("div");
-				reload = true;
-				textBox1.Text +="==="+Environment.NewLine;
+				while (webBrowser1.IsBusy){ Application.DoEvents();}
+				textBox1.Text = "";
+				 elems = webBrowser1.Document.GetElementsByTagName("div");
+				reload = false;
 				foreach (HtmlElement elem in  elems)
 				{					
-					textBox1.Text += elem.InnerText +Environment.NewLine;
-					if (elem.InnerText!=null)
-					{
-						if (elem.InnerText.Contains("Бой начнется")) 
-						{
-							reload = false;
-							FindAndClick("a","Обновить");
-							break;
-						}
-					}
-				
+					textBox1.Text += elem.InnerText;
 				}
-				Delay(rnd.Next(300, 500));
+				if (textBox1.Text.Contains("Бой")) 
+				{
+					reload = true;
+					textBox1.Text += "+++++++++ нашел";
+					
+					while ( !FindAndClick("a", "Обновить") )
+					{Delay(250);}
+					
+					
+				}
+				
+				
+				
+				Delay(rnd.Next(800, 1500));
+				
+				textBox1.Text += "+++++++++ delay";
+				
 			}
 			while (reload);	//
 			
 			
+			textBox1.Text = "Бой начался";
+			
+			while (webBrowser1.IsBusy){ Application.DoEvents();}
+			
+			textBox1.Text = "Бой начался";
+				 elems = webBrowser1.Document.GetElementsByTagName("div");
+				
+				foreach (HtmlElement elem in  elems)
+				{					
+					textBox1.Text += elem.InnerText;
+					if (elem.GetAttribute("id")!="")
+					{
+					   textBox1.Text += elem.GetAttribute("class") + "++++++++";
+					}
+				}
 			
 			
+						
 			
         }
+		void BtAnalizeClick(object sender, EventArgs e)
+		{
+			HtmlElementCollection elems = webBrowser1.Document.All;
+			textBox1.Text += Environment.NewLine+ " Attribute " + tbAtrib.Text+Environment.NewLine;
+			foreach (HtmlElement elem in  elems)
+				{					
+					
+					if (elem.GetAttribute(tbAtrib.Text)!="")
+					{
+					   textBox1.Text += elem.GetAttribute(tbAtrib.Text) + "   -  ";
+					}
+				}
+			textBox1.Text += Environment.NewLine+ " id " + tbAtrib.Text+Environment.NewLine;
+			
+			 elems = webBrowser1.Document.GetElementsByTagName(tbAtrib.Text);
+			foreach (HtmlElement elem in  elems)
+				{					
+					
+					
+					{
+					   textBox1.Text += elem.Id + "   -  ";
+					}
+				}
+			 elems = webBrowser1.Document.GetElementsByTagName(tbAtrib.Text);
+			foreach (HtmlElement elem in  elems)
+				{					
+					
+					
+					{
+					textBox1.Text += elem.InnerText + "   -==  ";
+				}
+			}
+	
+		}
 		           
 	}
 }
